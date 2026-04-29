@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PromptHub
 
-## Getting Started
+Учебный веб-сервис для работы с промптами:
+- создание и редактирование шаблонов
+- каталог, поиск и подсказки
+- профиль с моими шаблонами и избранным
+- база знаний и исследования по лучшим практикам
 
-First, run the development server:
+Стек: Next.js (App Router), TypeScript, Tailwind CSS, React Hook Form + Zod, Jest, React Testing Library, Playwright, mock API.
+
+## Роли пользователей
+
+- Гость:
+  - просмотр каталога и карточек промптов
+  - поиск по шаблонам и подсказки
+  - без создания и редактирования
+- Автор:
+  - создание новых шаблонов
+  - редактирование только своих шаблонов
+  - добавление/удаление избранного
+  - создание копии чужого шаблона
+
+Роль задается mock-объектом в `src/lib/auth.ts`.
+
+## Запуск
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Открыть: [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Тесты
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run test
+npm run test:e2e
+```
 
-## Learn More
+## Пользовательские сценарии
 
-To learn more about Next.js, take a look at the following resources:
+1) Поиск -> просмотр -> добавление в избранное
+- На главной введите запрос и нажмите "Поиск"
+- Откройте карточку из результатов
+- Нажмите "В избранное" (или "Убрать из избранного")
+- Проверьте список в `profile/favorites`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2) Создание -> сохранение -> отображение в профиле
+- Перейдите в `create`
+- Заполните форму и сохраните
+- Выполняется редирект на `/prompts/{id}`
+- Перейдите в `profile/my-templates` и проверьте наличие созданного шаблона
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Оба сценария покрыты E2E тестами в `e2e/create-and-save.spec.ts`.
 
-## Deploy on Vercel
+## Отсутствие мертвых концов
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- На каждой ключевой странице есть навигация назад или в смежные разделы.
+- Маршрут `/profile` реализован, breadcrumbs не ведут на 404.
+- Для отсутствующего промпта есть fallback: переход в каталог.
+- Разделы `knowledge` и `research` заполнены статическим контентом платформы.
+- Поиск работает через GET-параметр `query`, debounce реализован, состояние восстанавливается из URL.

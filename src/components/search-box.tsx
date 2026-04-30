@@ -34,11 +34,13 @@ export function SearchBox({ initialQuery = "" }: SearchBoxProps) {
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
+          aria-label="Поисковый запрос"
           className="w-full rounded border px-3 py-2"
           placeholder="Найти шаблон..."
         />
         <button
           type="submit"
+          aria-label="Запустить поиск"
           className="rounded bg-zinc-900 px-4 py-2 text-white transition hover:bg-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 active:bg-black disabled:bg-zinc-400"
           disabled={!query.trim()}
         >

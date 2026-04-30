@@ -29,3 +29,85 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+.prompt-editor-wrapper {
+  position: relative;
+}
+
+.prompt-editor-highlight,
+.prompt-editor-input {
+  margin: 0;
+  width: 100%;
+  min-height: 12rem;
+  padding: 0.75rem;
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.prompt-editor-highlight {
+  pointer-events: none;
+  color: #27272a;
+}
+
+.prompt-editor-highlight code {
+  display: block;
+}
+
+.prompt-editor-input {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: transparent;
+  color: transparent;
+  caret-color: #111827;
+  resize: vertical;
+  outline: none;
+}
+
+.prompt-editor-wrapper:focus-within {
+  box-shadow: 0 0 0 2px #18181b;
+}
+
+.pe-token-heading {
+  color: #4338ca;
+  font-weight: 700;
+}
+
+.pe-token-arrow,
+.pe-token-meta {
+  color: #7c3aed;
+  font-weight: 700;
+}
+
+.pe-token-tag,
+.pe-token-variable {
+  color: #0f766e;
+}
+
+.pe-token-caps {
+  color: #be123c;
+  font-weight: 700;
+}
+
+.pe-token-inline {
+  color: #b45309;
+}
+
+.pe-token-json,
+.pe-token-json-key {
+  color: #1d4ed8;
+}
+
+.pe-token-decorator {
+  color: #047857;
+  font-weight: 700;
+}
+
+:is(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid #111827;
+  outline-offset: 2px;
+}

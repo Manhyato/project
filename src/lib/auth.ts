@@ -1,15 +1,23 @@
-export type UserRole = "guest" | "author";
+import { authStore } from "@/lib/auth-store";
 
-export const CURRENT_USER = {
-  id: "author-1",
-  name: "Demo Author",
-  role: "author" as UserRole,
-};
+export const AUTHOR_ID = "author-1";
 
 export function canEdit(authorId: string) {
-  return CURRENT_USER.role === "author" && CURRENT_USER.id === authorId;
+  return authStore.getSnapshot().role === "author" && AUTHOR_ID === authorId;
 }
 
 export function canCreate() {
-  return CURRENT_USER.role === "author";
+  return authStore.getSnapshot().role === "author";
+}
+
+export function loginAsAuthor(email: string) {
+  authStore.loginAsAuthor(email);
+}
+
+export function logout() {
+  authStore.logout();
+}
+
+export function getCurrentUser() {
+  return authStore.getSnapshot();
 }

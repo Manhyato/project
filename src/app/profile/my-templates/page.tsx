@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { CURRENT_USER } from "@/lib/auth";
+import { AUTHOR_ID } from "@/lib/auth";
 import { usePrompts } from "@/lib/prompt-store";
 
 export default function MyTemplatesPage() {
-  const prompts = usePrompts().filter((item) => item.authorId === CURRENT_USER.id);
+  const prompts = usePrompts().filter((item) => item.authorId === AUTHOR_ID);
   return (
     <div className="space-y-3">
       <h1 className="text-2xl font-semibold">Мои шаблоны</h1>

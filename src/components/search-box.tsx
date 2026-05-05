@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSearchSuggestions } from "@/lib/prompt-service";
+import { Button } from "@/components/ui/button";
 
 type SearchBoxProps = {
   initialQuery?: string;
@@ -35,21 +36,16 @@ export function SearchBox({ initialQuery = "" }: SearchBoxProps) {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           aria-label="Поисковый запрос"
-          className="w-full rounded border px-3 py-2"
+          className="w-full rounded border border-zinc-300 bg-white px-3 py-2 text-zinc-900 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100"
           placeholder="Найти шаблон..."
         />
-        <button
-          type="submit"
-          aria-label="Запустить поиск"
-          className="rounded bg-zinc-900 px-4 py-2 text-white transition hover:bg-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 active:bg-black disabled:bg-zinc-400"
-          disabled={!query.trim()}
-        >
+        <Button type="submit" variant="primary" aria-label="Запустить поиск" disabled={!query.trim()}>
           Поиск
-        </button>
+        </Button>
       </form>
 
       {query.length >= 3 && suggestions.length > 0 ? (
-        <ul className="rounded border bg-white p-2 text-sm">
+        <ul className="rounded border border-zinc-300 bg-white p-2 text-sm dark:border-zinc-600 dark:bg-zinc-900">
           {suggestions.map((suggestion) => (
             <li key={suggestion} className="py-1">
               {suggestion}

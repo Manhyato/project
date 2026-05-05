@@ -2,16 +2,31 @@
 
 import Link from "next/link";
 import { PromptForm } from "@/components/prompt-form";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-store";
 
 export default function CreatePage() {
   const { isAuthor } = useAuth();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <section className="space-y-3">
+        <h1 className="text-2xl font-semibold">Создание шаблона</h1>
+        <p className="text-zinc-600 dark:text-zinc-300">Проверка роли пользователя...</p>
+      </section>
+    );
+  }
 
   if (!isAuthor) {
     return (
       <section className="space-y-3">
         <h1 className="text-2xl font-semibold">Создание шаблона</h1>
-        <p>Гостевой режим: создание шаблонов недоступно.</p>
+        <p className="text-zinc-700 dark:text-zinc-300">Гостевой режим: создание шаблонов недоступно.</p>
         <Link href="/catalog" className="underline">
           Перейти в каталог
         </Link>

@@ -6,6 +6,7 @@ import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useAuth } from "@/lib/auth-store";
+import { Button } from "@/components/ui/button";
 
 const loginSchema = z.object({
   email: z.string().email("Введите корректный email"),
@@ -39,7 +40,7 @@ export default function LoginPage() {
   );
 
   return (
-    <section className="max-w-md space-y-4 rounded border bg-white p-4">
+    <section className="max-w-md space-y-4 rounded border border-zinc-300 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900">
       <h1 className="text-2xl font-semibold">Вход</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
         <label className="block space-y-1">
@@ -49,7 +50,7 @@ export default function LoginPage() {
             type="email"
             autoComplete="email"
             aria-label="Email"
-            className="w-full rounded border px-3 py-2"
+            className="w-full rounded border border-zinc-300 bg-white px-3 py-2 text-zinc-900 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100"
             placeholder="you@example.com"
           />
         </label>
@@ -62,20 +63,20 @@ export default function LoginPage() {
             type="password"
             autoComplete="current-password"
             aria-label="Пароль"
-            className="w-full rounded border px-3 py-2"
+            className="w-full rounded border border-zinc-300 bg-white px-3 py-2 text-zinc-900 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100"
             placeholder="Введите пароль"
           />
         </label>
         {errors.password ? <p className="text-sm text-red-600">{errors.password.message}</p> : null}
 
-        <button
+        <Button
           type="submit"
+          variant="primary"
           aria-label="Войти в профиль"
           disabled={isSubmitting}
-          className="rounded bg-black px-4 py-2 text-white disabled:bg-zinc-400"
         >
           Войти
-        </button>
+        </Button>
       </form>
     </section>
   );

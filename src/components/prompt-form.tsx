@@ -9,6 +9,7 @@ import { canCreate } from "@/lib/auth";
 import { createPrompt, updatePrompt } from "@/lib/prompt-store";
 import { PromptFormValues, promptSchema } from "@/lib/validation";
 import { Prompt } from "@/types/prompt";
+import { Button } from "@/components/ui/button";
 
 const PromptEditor = dynamic(() => import("@/components/prompt-editor"), {
   ssr: false,
@@ -68,14 +69,14 @@ function PromptFormComponent({ mode, initialValues }: PromptFormProps) {
   );
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 rounded border bg-white p-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 rounded border border-zinc-300 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900">
       <label className="block space-y-1">
         <span className="text-sm font-medium">Название</span>
         <input
           {...register("title")}
           aria-label="Название промпта"
           placeholder="Название"
-          className="w-full rounded border px-3 py-2"
+          className="w-full rounded border border-zinc-300 bg-white px-3 py-2 text-zinc-900 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100"
         />
       </label>
       {errors.title ? <p className="text-sm text-red-600">{errors.title.message}</p> : null}
@@ -86,7 +87,7 @@ function PromptFormComponent({ mode, initialValues }: PromptFormProps) {
           {...register("description")}
           aria-label="Краткое описание"
           placeholder="Краткое описание"
-          className="w-full rounded border px-3 py-2"
+          className="w-full rounded border border-zinc-300 bg-white px-3 py-2 text-zinc-900 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100"
         />
       </label>
       {errors.description ? <p className="text-sm text-red-600">{errors.description.message}</p> : null}
@@ -111,7 +112,11 @@ function PromptFormComponent({ mode, initialValues }: PromptFormProps) {
 
       <label className="block space-y-1">
         <span className="text-sm font-medium">Категория</span>
-        <select {...register("category")} aria-label="Категория" className="w-full rounded border px-3 py-2">
+        <select
+          {...register("category")}
+          aria-label="Категория"
+          className="w-full rounded border border-zinc-300 bg-white px-3 py-2 text-zinc-900 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100"
+        >
           <option value="development">Разработка</option>
           <option value="marketing">Маркетинг</option>
           <option value="education">Обучение</option>
@@ -125,19 +130,19 @@ function PromptFormComponent({ mode, initialValues }: PromptFormProps) {
           {...register("tags")}
           aria-label="Теги через запятую"
           placeholder="Теги через запятую"
-          className="w-full rounded border px-3 py-2"
+          className="w-full rounded border border-zinc-300 bg-white px-3 py-2 text-zinc-900 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100"
         />
       </label>
       {errors.tags ? <p className="text-sm text-red-600">{errors.tags.message}</p> : null}
 
-      <button
+      <Button
         type="submit"
+        variant="primary"
         aria-label={mode === "create" ? "Сохранить шаблон" : "Сохранить изменения шаблона"}
         disabled={!isValid || isSubmitting || (mode === "create" && !canCreate())}
-        className="rounded bg-black px-4 py-2 text-white disabled:bg-zinc-400"
       >
         {mode === "create" ? "Сохранить шаблон" : "Сохранить изменения"}
-      </button>
+      </Button>
     </form>
   );
 }

@@ -28,6 +28,11 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+  cursor: pointer;
+}
+
+button {
+  cursor: pointer;
 }
 
 .prompt-editor-wrapper {
@@ -88,6 +93,15 @@ a {
   color: #0f766e;
 }
 
+.pe-token-tag-bracket {
+  color: #0f766e;
+}
+
+.pe-token-tag-name {
+  color: #0d9488;
+  font-weight: 700;
+}
+
 .pe-token-caps {
   color: #be123c;
   font-weight: 700;
@@ -102,12 +116,54 @@ a {
   color: #1d4ed8;
 }
 
+.pe-token-json-value {
+  color: #2563eb;
+}
+
+.pe-token-json-colon {
+  color: #60a5fa;
+}
+
 .pe-token-decorator {
   color: #047857;
   font-weight: 700;
 }
 
+.pe-token-divider {
+  color: #52525b;
+  font-weight: 700;
+}
+
+.pe-token-codeblock {
+  color: #f59e0b;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 0.25rem;
+}
+
 :is(a, button, input, select, textarea):focus-visible {
   outline: 2px solid #111827;
   outline-offset: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .prompt-editor-highlight {
+    color: #e4e4e7;
+  }
+
+  .prompt-editor-input {
+    caret-color: #f4f4f5;
+  }
+
+  .prompt-editor-wrapper:focus-within {
+    box-shadow: 0 0 0 2px #f4f4f5;
+  }
+
+  :is(a, button, input, select, textarea):focus-visible {
+    outline: 2px solid #f4f4f5;
+  }
+
+  .pe-token-codeblock {
+    color: #fbbf24;
+    background: rgba(255, 255, 255, 0.08);
+  }
 }

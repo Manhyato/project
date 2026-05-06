@@ -17,4 +17,16 @@ describe("PromptEditor", () => {
 
     expect(editor).toHaveValue("## Heading {{variable}}");
   });
+
+  it("formats selected text with toolbar buttons", () => {
+    render(<PromptEditorHarness />);
+
+    const editor = screen.getByLabelText("Текст промпта") as HTMLTextAreaElement;
+    editor.focus();
+    editor.setSelectionRange(3, 10);
+
+    fireEvent.click(screen.getByRole("button", { name: "Жирный" }));
+
+    expect(editor).toHaveValue("## **Heading**");
+  });
 });

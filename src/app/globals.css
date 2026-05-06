@@ -35,12 +35,44 @@ button {
   cursor: pointer;
 }
 
+.prompt-editor-shell {
+  overflow: hidden;
+}
+
+.prompt-editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  border-bottom: 1px solid #d4d4d8;
+  background: #f4f4f5;
+  padding: 0.35rem;
+}
+
+.prompt-editor-tool {
+  min-width: 2rem;
+  height: 1.75rem;
+  border-radius: 0.25rem;
+  border: 1px solid #d4d4d8;
+  background: #ffffff;
+  color: #18181b;
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.prompt-editor-tool:hover {
+  background: #e4e4e7;
+}
+
 .prompt-editor-wrapper {
   position: relative;
 }
 
 .prompt-editor-highlight,
-.prompt-editor-input {
+.prompt-editor-input,
+.prompt-preview {
   margin: 0;
   width: 100%;
   min-height: 12rem;
@@ -73,7 +105,7 @@ button {
   outline: none;
 }
 
-.prompt-editor-wrapper:focus-within {
+.prompt-editor-shell:focus-within {
   box-shadow: 0 0 0 2px #18181b;
 }
 
@@ -146,6 +178,21 @@ button {
 }
 
 @media (prefers-color-scheme: dark) {
+  .prompt-editor-toolbar {
+    border-bottom-color: #3f3f46;
+    background: #18181b;
+  }
+
+  .prompt-editor-tool {
+    border-color: #3f3f46;
+    background: #09090b;
+    color: #f4f4f5;
+  }
+
+  .prompt-editor-tool:hover {
+    background: #27272a;
+  }
+
   .prompt-editor-highlight {
     color: #e4e4e7;
   }
@@ -154,7 +201,7 @@ button {
     caret-color: #f4f4f5;
   }
 
-  .prompt-editor-wrapper:focus-within {
+  .prompt-editor-shell:focus-within {
     box-shadow: 0 0 0 2px #f4f4f5;
   }
 

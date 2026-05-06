@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { memo, useCallback } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, FieldErrors, useForm } from "react-hook-form";
 import { canCreate } from "@/lib/auth";
 import { createPrompt, updatePrompt } from "@/lib/prompt-store";
 import { PromptFormValues, promptSchema } from "@/lib/validation";
@@ -27,7 +27,8 @@ function PromptFormComponent({ mode, initialValues }: PromptFormProps) {
     register,
     handleSubmit,
     control,
-    formState: { errors, isSubmitting, isValid },
+    setFocus,
+    formState: { errors, isSubmitting },
   } = useForm<PromptFormValues>({
     resolver: zodResolver(promptSchema),
     mode: "onChange",
@@ -68,8 +69,18 @@ function PromptFormComponent({ mode, initialValues }: PromptFormProps) {
     [initialValues, mode, router],
   );
 
+  const onInvalid = useCallback(
+    (formErrors: FieldErrors<PromptFormValues>) => {
+      const firstInvalidField = (["title", "description", "content", "tags"] as const).find((field) => formErrors[field]);
+      if (firstInvalidField) {
+        setFocus(firstInvalidField);
+      }
+    },
+    [setFocus],
+  );
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 rounded border border-zinc-300 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900">
+    <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="space-y-4 rounded border border-zinc-300 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900">
       <label className="block space-y-1">
         <span className="text-sm font-medium">Название</span>
         <input
@@ -99,6 +110,7 @@ function PromptFormComponent({ mode, initialValues }: PromptFormProps) {
           control={control}
           render={({ field }) => (
             <PromptEditor
+              ref={field.ref}
               id="prompt-content-editor"
               ariaLabel="Текст промпта"
               value={field.value}
@@ -139,7 +151,7 @@ function PromptFormComponent({ mode, initialValues }: PromptFormProps) {
         type="submit"
         variant="primary"
         aria-label={mode === "create" ? "Сохранить шаблон" : "Сохранить изменения шаблона"}
-        disabled={!isValid || isSubmitting || (mode === "create" && !canCreate())}
+        disabled={isSubmitting || (mode === "create" && !canCreate())}
       >
         {mode === "create" ? "Сохранить шаблон" : "Сохранить изменения"}
       </Button>

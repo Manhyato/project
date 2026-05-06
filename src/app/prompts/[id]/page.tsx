@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { AUTHOR_ID, canEdit } from "@/lib/auth";
 import { createPrompt, toggleFavorite, usePrompts } from "@/lib/prompt-store";
+import { highlightPromptSyntax } from "@/components/prompt-editor";
 import { Button, buttonVariants } from "@/components/ui/button";
 
 export default function PromptPage() {
@@ -13,6 +14,7 @@ export default function PromptPage() {
   const prompts = usePrompts();
   const prompt = prompts.find((item) => item.id === id);
   const [copyMessage, setCopyMessage] = useState("");
+  const highlightedContent = useMemo(() => (prompt ? highlightPromptSyntax(prompt.content) : ""), [prompt]);
 
   if (!prompt) {
     return (
@@ -52,7 +54,13 @@ export default function PromptPage() {
     <article className="space-y-4 rounded border border-zinc-300 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
       <h1 className="text-2xl font-semibold">{prompt.title}</h1>
       <p className="text-zinc-600 dark:text-zinc-300">{prompt.description}</p>
-      <pre className="overflow-x-auto rounded bg-zinc-100 p-3 text-sm whitespace-pre-wrap dark:bg-zinc-800">{prompt.content}</pre>
+      <pre className="prompt-preview overflow-x-auto rounded bg-zinc-100 p-3 text-sm whitespace-pre-wrap dark:bg-zinc-800">
+        <code
+          dangerouslySetInnerHTML={{
+            __html: highlightedContent,
+          }}
+        />
+      </pre>
       <div className="flex flex-wrap gap-3">
         {editable ? (
           <Link

@@ -1,6 +1,7 @@
 "use client";
 
-import { memo, useId, useMemo } from "react";
+import { forwardRef, memo, useId, useImperativeHandle, useMemo, useRef } from "react";
+import type { ForwardedRef } from "react";
 
 type PromptEditorProps = {
   value: string;
@@ -74,7 +75,7 @@ function highlightNonCodeSegment(value: string) {
   );
 }
 
-function highlightPromptSyntax(value: string) {
+export function highlightPromptSyntax(value: string) {
   const blockPattern = /```[\s\S]*?```|'''[\s\S]*?'''/g;
   const inlinePattern = /`[^`\n]*?`/g;
 
@@ -125,37 +126,87 @@ function highlightPromptSyntax(value: string) {
   return highlighted.join("");
 }
 
-function PromptEditorComponent({ value, onChange, placeholder, id, ariaLabel }: PromptEditorProps) {
+const editorTools = [
+  { label: "B", title: "Жирный", before: "**", after: "**", fallback: "жирный текст" },
+  { label: "I", title: "Курсив", before: "*", after: "*", fallback: "курсив" },
+  { label: "`", title: "Инлайн-код", before: "`", after: "`", fallback: "код" },
+  { label: "```", title: "Блок кода", before: "```\n", after: "\n```", fallback: "код" },
+  { label: "#", title: "Заголовок H1", before: "# ", after: "", fallback: "Заголовок" },
+  { label: "###", title: "Заголовок H3", before: "### ", after: "", fallback: "Заголовок" },
+] as const;
+
+function PromptEditorComponent(
+  { value, onChange, placeholder, id, ariaLabel }: PromptEditorProps,
+  forwardedRef: ForwardedRef<HTMLTextAreaElement>,
+) {
   const generatedId = useId();
   const editorId = id ?? generatedId;
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useImperativeHandle(forwardedRef, () => textareaRef.current as HTMLTextAreaElement);
 
   const highlightedContent = useMemo(() => {
     if (!value.trim()) return "";
     return highlightPromptSyntax(value);
   }, [value]);
 
+  const applyTool = (before: string, after: string, fallback: string) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = value.slice(start, end) || fallback;
+    const nextValue = `${value.slice(0, start)}${before}${selectedText}${after}${value.slice(end)}`;
+    const nextStart = start + before.length;
+    const nextEnd = nextStart + selectedText.length;
+
+    onChange(nextValue);
+    requestAnimationFrame(() => {
+      textarea.focus();
+      textarea.setSelectionRange(nextStart, nextEnd);
+    });
+  };
+
   return (
-    <div className="prompt-editor-wrapper rounded border border-zinc-300 bg-white dark:border-zinc-700 dark:bg-zinc-900">
-      <pre aria-hidden="true" className="prompt-editor-highlight">
-        <code
-          dangerouslySetInnerHTML={{
-            __html: `${highlightedContent}${value.endsWith("\n") ? "\n" : ""}`,
-          }}
+    <div className="prompt-editor-shell rounded border border-zinc-300 bg-white dark:border-zinc-700 dark:bg-zinc-900">
+      <div className="prompt-editor-toolbar" aria-label="Быстрое форматирование">
+        {editorTools.map((tool) => (
+          <button
+            key={tool.title}
+            type="button"
+            title={tool.title}
+            aria-label={tool.title}
+            className="prompt-editor-tool"
+            onClick={() => applyTool(tool.before, tool.after, tool.fallback)}
+          >
+            {tool.label}
+          </button>
+        ))}
+      </div>
+      <div className="prompt-editor-wrapper">
+        <pre aria-hidden="true" className="prompt-editor-highlight">
+          <code
+            dangerouslySetInnerHTML={{
+              __html: `${highlightedContent}${value.endsWith("\n") ? "\n" : ""}`,
+            }}
+          />
+        </pre>
+        <textarea
+          ref={textareaRef}
+          id={editorId}
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          placeholder={placeholder}
+          aria-label={ariaLabel}
+          className="prompt-editor-input"
+          rows={10}
         />
-      </pre>
-      <textarea
-        id={editorId}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
-        aria-label={ariaLabel}
-        className="prompt-editor-input"
-        rows={10}
-      />
+      </div>
     </div>
   );
 }
 
-export const PromptEditor = memo(PromptEditorComponent);
+export const PromptEditor = memo(forwardRef(PromptEditorComponent));
 
 export default PromptEditor;
